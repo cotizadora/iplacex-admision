@@ -10,7 +10,7 @@ window.IPLACEX_CONFIG = {
   // 1) URL de la app web de Apps Script (termina en /exec).
   //    Mientras esté vacía, la plataforma funciona en MODO LOCAL de prueba
   //    (guarda en el propio teléfono) y el panel lo advierte claramente.
-  BACKEND_URL: "https://script.google.com/macros/s/AKfycbw6JLTDmhCg1acSDbvTnf_eap8WLnkSXm7tSl_404Z2uAtFn_klCqWECndaeEWYwqe0/exec",
+  BACKEND_URL: "https://script.google.com/macros/s/AKfycbzHel8-pMOhxkdCiNMHhgDKe59QEI_EJxmKAABpHOZa7K1nn8LdKexyZcXtIW-zqj-4/exec",
 
   // 2) WhatsApp de destino de la ejecutiva (formato internacional, sin +).
   WHATSAPP: "56949683594",
