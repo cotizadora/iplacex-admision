@@ -466,7 +466,7 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
           <div class="legal" id="cs-legal"></div>
           <div class="msg">Necesitamos tu autorización para poder contactarte.</div>
         </div>
-        <button class="btn lg" type="submit">Continuar a la tómbola →</button>
+        <button class="btn lg" type="submit">Participar en la tómbola →</button>
         <button class="btn ghost sm" type="button" style="width:100%" onclick="App.go('hero')">← Volver</button>
       </form>
     </div>
@@ -476,9 +476,9 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
   <section class="screen" id="s-game">
     <div class="card">
       <h2>Tómbola de participación</h2>
-      <p class="muted">Presiona PARTICIPAR y la tómbola te asignará tu número de concurso.</p>
+      <p class="muted">La tómbola está girando. En unos segundos aparecerá tu número de concurso.</p>
       <div class="board-wrap"><div class="board" id="board"></div></div>
-      <div class="play-status" id="play-status">Toca PARTICIPAR para comenzar</div>
+      <div class="play-status" id="play-status">Preparando la tómbola…</div>
       <button class="btn lg" id="btn-jugar" onclick="Game.play()">PARTICIPAR</button>
     </div>
   </section>
@@ -786,9 +786,11 @@ const App = {
       actividad: CFG.ACTIVIDAD, fecha:t.fecha, hora:t.hora, creado:t.iso,
       consent:true, consentTs:t.iso   // autorización explícita del postulante
     };
-    // reinicia la tombola y avanza
+    // reinicia la tómbola y avanza
     this.resultado=null; Game.reset();
     this.go("game");
+    // Arranca sola: un botón más entre el formulario y el premio solo estorba.
+    setTimeout(()=>Game.play(), 420);
   },
   saveState(){ sessionStorage.setItem(LS.participacion, JSON.stringify({lead:this.lead, resultado:this.resultado})); },
 
@@ -905,7 +907,8 @@ const Game = {
   reset(){
     this.build(); this.playing=false;
     $("#btn-jugar").disabled=false; $("#btn-jugar").textContent="PARTICIPAR";
-    $("#play-status").textContent="Toca PARTICIPAR para comenzar";
+    $("#btn-jugar").hidden=true;                       // arranca sola
+    $("#play-status").textContent="Preparando la tómbola…";
     this._fillBoard();
   },
   _fillBoard(winner){
@@ -919,7 +922,7 @@ const Game = {
     if(this.playing) return;
     if(!App.lead){ App.go("form"); return; }
     this.playing=true;
-    const btn=$("#btn-jugar"); btn.disabled=true; btn.textContent="En la tómbola…";
+    const btn=$("#btn-jugar"); btn.disabled=true; btn.hidden=true;
     $("#play-status").textContent="Asignando tu número…";
     Sound.spinStart();
 
@@ -949,7 +952,20 @@ const Game = {
         if(Date.now()-t0<700 && delay>26) delay-=3;   // acelera al partir
       }
     };
-    const spinP = menosMovimiento() ? Promise.resolve() : spin();
+    /* Quien pidió menos movimiento igual ve girar la tómbola, pero calmada:
+       pocas celdas y sin parpadeo rápido. Antes se la saltaba entera y quedaba
+       la sensación de que no pasaba nada. */
+    const suave = menosMovimiento();
+    const spinSuave = async ()=>{
+      const ruta=this.rutas[0];
+      let p=Math.floor(Math.random()*ruta.length);
+      while(!stop){
+        this._encender(ruta[p%ruta.length], []);
+        p+=7;
+        await new Promise(r=>setTimeout(r,240));
+      }
+    };
+    const spinP = suave ? spinSuave() : spin();
 
     // 2) Registrar en backend y obtener el número REAL asignado por el servidor.
     let res;
@@ -962,7 +978,7 @@ const Game = {
       clearAll();
       Queue.add(Object.assign({}, App.lead));
       $("#play-status").textContent = "Sin conexión. Tus datos quedaron guardados.";
-      btn.disabled=false; btn.textContent="Reintentar";
+      btn.disabled=false; btn.hidden=false; btn.textContent="Reintentar";
       this.playing=false;
       toast("Sin señal: reintenta en un momento.");
       return;
@@ -971,8 +987,16 @@ const Game = {
     // 3) Aterrizaje: elegir celda destino y desacelerar hasta ella.
     const target = Math.floor(Math.random()*this.N);
     this.numbers[target]=res.numero; this.cells[target].textContent=res.numero;
-    if(menosMovimiento()){
-      stop=true; await spinP; clearAll();          // sin recorrido ni desaceleración
+    if(suave){
+      await new Promise(r=>setTimeout(r,600));
+      stop=true; await spinP;
+      // Aterrizaje calmado: cuatro celdas y llega
+      const ruta=this.rutas[0], p=ruta.indexOf(target);
+      for(let k=4;k>0;k--){
+        this._encender(ruta[(p-k+ruta.length)%ruta.length], []);
+        await new Promise(r=>setTimeout(r,260));
+      }
+      this._encender(target, []);
     }else{
       await new Promise(r=>setTimeout(r,900));      // mínimo de suspenso
       stop=true; await spinP;
