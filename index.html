@@ -1026,7 +1026,7 @@ const Admin = {
       const fh = d.fecha? (d.fecha+" "+(d.hora||"")) : (d.creado||"").replace("T"," ").slice(0,16);
       const id=d.id||d.leadId;
       tr.innerHTML=
-        `<td class="num">${d.numero||"—"}</td>`+
+        `<td class="num">${esc(d.numero)||"—"}</td>`+
         `<td class="fh">${fh}</td>`+
         `<td>${esc(d.nombre)}${d.provisional?'<span class="dup-tag">sync</span>':''}</td>`+
         `<td>${esc(d.apellidos)}</td>`+
@@ -1034,15 +1034,23 @@ const Admin = {
         `<td>${esc(d.celular)}</td>`+
         `<td class="trunc" title="${esc(d.email)}">${esc(d.email)}</td>`+
         `<td class="trunc" title="${esc(d.carrera)}">${esc(d.carrera)}</td>`+
-        `<td><select class="estado" data-id="${id}">`+
+        `<td><select class="estado" data-id="${esc(id)}">`+
           estados.map(e=>`<option value="${e}" ${e===est?"selected":""}>${e[0].toUpperCase()+e.slice(1)}</option>`).join("")+
         `</select></td>`+
+        /* Sin onclick en línea: el id viaja en data-* y se resuelve por delegación.
+           Así un id malicioso no puede romper el atributo y ejecutar código. */
         `<td class="acc">`+
-          `<button class="iconbtn" title="Copiar datos de esta persona" aria-label="Copiar datos" onclick="Admin.copiarUno('${id}',this)">${ICO.copiar()}</button>`+
-          `<button class="iconbtn wa" title="Escribirle por WhatsApp" aria-label="Escribir por WhatsApp" onclick="Admin.escribirLead('${id}')">${ICO.chat()}</button>`+
+          `<button class="iconbtn" data-acc="copiar" data-id="${esc(id)}" title="Copiar datos de esta persona" aria-label="Copiar datos">${ICO.copiar()}</button>`+
+          `<button class="iconbtn wa" data-acc="wa" data-id="${esc(id)}" title="Escribirle por WhatsApp" aria-label="Escribir por WhatsApp">${ICO.chat()}</button>`+
         `</td>`;
       tb.appendChild(tr);
     });
+    // Delegación para los botones de acción de cada fila.
+    $$("#tbody .iconbtn").forEach(b=>b.addEventListener("click", ev=>{
+      const btn=ev.currentTarget, id=btn.dataset.id;
+      if(btn.dataset.acc==="copiar") this.copiarUno(id, btn);
+      else this.escribirLead(id);
+    }));
     $$("#tbody select.estado").forEach(s=>s.addEventListener("change", async e=>{
       const id=e.target.dataset.id, val=e.target.value;
       const rec=this.data.find(d=>(d.id||d.leadId)===id); if(rec) rec.estado=val;
