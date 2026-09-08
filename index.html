@@ -76,10 +76,12 @@ h2{font-size:20px; margin:0 0 4px}
 #s-hero .card{background:linear-gradient(165deg,#ffffff,#f4f7ff)}
 .hero-badge{display:inline-flex; align-items:center; gap:8px; background:#eaf0ff; color:var(--azul);
   font-weight:700; font-size:12.5px; padding:7px 12px; border-radius:999px; letter-spacing:.02em}
-.hero-blocks{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin:18px 0}
-.hero-blocks span{aspect-ratio:1; border-radius:10px; background:linear-gradient(150deg,#e9edfb,#dfe6ff)}
-.hero-blocks span:nth-child(3n){background:linear-gradient(150deg,var(--azul),var(--azul-2)); box-shadow:0 8px 18px -8px var(--azul)}
-.hero-blocks span:nth-child(4){background:linear-gradient(150deg,var(--cyan),#1aa9e6)}
+.hero-logo{margin:20px 0 18px; padding:26px 20px; border-radius:16px;
+  background:linear-gradient(150deg,var(--navy) 0%, #16227a 55%, var(--azul) 140%);
+  box-shadow:0 14px 30px -14px var(--navy); display:flex; align-items:center; justify-content:center}
+.hero-logo img{height:62px; width:auto; filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
+/* En la portada el logo grande manda: se oculta el pequeño del encabezado */
+body.on-hero .brand{display:none}
 .steps{display:flex; gap:8px; margin:14px 0 4px; justify-content:center; flex-wrap:wrap}
 .steps b{background:#eef2ff; color:var(--azul); font-size:12px; padding:6px 10px; border-radius:8px; font-weight:700}
 
@@ -227,10 +229,10 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
   <section class="screen active" id="s-hero">
     <div class="card center">
       <span class="hero-badge">🎓 Postulación en terreno</span>
-      <div class="hero-blocks"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+      <div class="hero-logo"><img src="assets/iplacex-logo.svg" alt="IPLACEX"></div>
       <h1>Postula y participa por un premio</h1>
-      <p class="muted">Completa tus datos en menos de un minuto, juega y obtén tu número de concurso. Un ejecutivo de admisión te contactará.</p>
-      <div class="steps"><b>1 · Tus datos</b><b>2 · Juega</b><b>3 · Tu número</b></div>
+      <p class="muted">Completa tus datos en menos de un minuto, participa en la tómbola y obtén tu número de concurso. Un ejecutivo de admisión te contactará.</p>
+      <div class="steps"><b>1 · Tus datos</b><b>2 · Tómbola</b><b>3 · Tu número</b></div>
       <button class="btn lg" style="margin-top:18px" onclick="App.go('form')">Comenzar ahora →</button>
     </div>
     <div class="footer">
@@ -263,9 +265,9 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
         </div>
         <div class="field" data-f="celular">
           <label>Celular <span class="req">*</span></label>
-          <div class="phone"><span class="pre"><span class="flag">🇨🇱</span>+56&nbsp;9</span><input name="celular" type="tel" inputmode="numeric" maxlength="9" placeholder="1234 5678"></div>
-          <div class="hint">8 dígitos, sin el 9 inicial.</div>
-          <div class="msg">Ingresa un celular chileno válido (8 dígitos).</div>
+          <div class="phone"><span class="pre"><span class="flag">🇨🇱</span>+56</span><input name="celular" type="tel" inputmode="numeric" maxlength="9" placeholder="9 1234 5678"></div>
+          <div class="hint">9 dígitos, partiendo con 9.</div>
+          <div class="msg">Ingresa un celular chileno válido (9 dígitos, comenzando con 9).</div>
         </div>
         <div class="field" data-f="email">
           <label>Email <span class="req">*</span></label>
@@ -286,20 +288,20 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
           <div class="legal" id="cs-legal"></div>
           <div class="msg">Necesitamos tu autorización para poder contactarte.</div>
         </div>
-        <button class="btn lg" type="submit">Continuar al juego →</button>
+        <button class="btn lg" type="submit">Continuar a la tómbola →</button>
         <button class="btn ghost sm" type="button" style="width:100%" onclick="App.go('hero')">← Volver</button>
       </form>
     </div>
   </section>
 
-  <!-- JUEGO -->
+  <!-- TOMBOLA -->
   <section class="screen" id="s-game">
     <div class="card">
-      <h2>¡A jugar! 🎰</h2>
-      <p class="muted">Presiona JUGAR y descubre tu número de concurso.</p>
+      <h2>Tómbola de participación</h2>
+      <p class="muted">Presiona PARTICIPAR y la tómbola te asignará tu número de concurso.</p>
       <div class="board-wrap"><div class="board" id="board"></div></div>
-      <div class="play-status" id="play-status">Toca JUGAR para comenzar</div>
-      <button class="btn lg" id="btn-jugar" onclick="Game.play()">JUGAR 🎉</button>
+      <div class="play-status" id="play-status">Toca PARTICIPAR para comenzar</div>
+      <button class="btn lg" id="btn-jugar" onclick="Game.play()">PARTICIPAR</button>
     </div>
   </section>
 
@@ -433,7 +435,7 @@ function validaRut(r){
   return calc===dv;
 }
 function validaEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((e||"").trim()); }
-function validaCel(c){ return /^[0-9]{8}$/.test((c||"").replace(/\D/g,"")); }
+function validaCel(c){ return /^9[0-9]{8}$/.test((c||"").replace(/\D/g,"")); }
 
 /* =====================================================================
    BACKEND CLIENT (Apps Script). Fallback local para pruebas.
@@ -494,6 +496,8 @@ const App = {
     // restaurar participación en curso (anti-recarga)
     const prev = JSON.parse(sessionStorage.getItem(LS.participacion)||"null");
     if(prev && prev.resultado){ this.lead=prev.lead; this.resultado=prev.resultado; }
+    // estado inicial: la portada arranca activa desde el HTML
+    document.body.classList.toggle("on-hero", $("#s-hero").classList.contains("active"));
     // reintenta cola pendiente al recuperar conexión
     window.addEventListener("online", Queue.flush);
     Queue.flush();
@@ -515,6 +519,7 @@ const App = {
     $$(".screen").forEach(s=>s.classList.remove("active"));
     $("#public-app").style.display = (screen==="admin")?"none":"flex";
     $("#"+map[screen]).classList.add("active");
+    document.body.classList.toggle("on-hero", screen==="hero");
     if(screen==="admin"){ if(!skipHash) location.hash="admin"; Admin.enter(); }
     else if(location.hash==="#admin" && !skipHash){ history.replaceState(null,"",location.pathname); }
     window.scrollTo(0,0);
@@ -524,7 +529,7 @@ const App = {
     // formato RUT en vivo
     const rut=f.rut; rut.addEventListener("input",()=>{ const p=rut.selectionStart; rut.value=formateaRut(rut.value); });
     // solo dígitos celular
-    f.celular.addEventListener("input",()=>{ f.celular.value=f.celular.value.replace(/\D/g,"").slice(0,8); });
+    f.celular.addEventListener("input",()=>{ f.celular.value=f.celular.value.replace(/\D/g,"").slice(0,9); });
     f.addEventListener("submit", e=>{ e.preventDefault(); this.submitForm(); });
   },
   _validate(){
@@ -547,12 +552,12 @@ const App = {
     this.lead = {
       leadId: uid(),
       nombre:f.nombre.value.trim(), apellidos:f.apellidos.value.trim(),
-      rut: formateaRut(f.rut.value), celular:"+569"+f.celular.value.replace(/\D/g,""),
+      rut: formateaRut(f.rut.value), celular:"+56"+f.celular.value.replace(/\D/g,""),
       email:f.email.value.trim(), carrera:f.carrera.value.trim(),
       actividad: CFG.ACTIVIDAD, fecha:t.fecha, hora:t.hora, creado:t.iso,
       consent:true, consentTs:t.iso   // autorización explícita del postulante
     };
-    // reset juego y pasar
+    // reinicia la tombola y avanza
     this.resultado=null; Game.reset();
     this.go("game");
   },
@@ -618,7 +623,7 @@ const Queue = {
 };
 
 /* =====================================================================
-   JUEGO — matriz 10×10 con recorrido tipo concurso.
+   TOMBOLA - matriz 10x10 con recorrido tipo concurso.
    El servidor entrega el número; la animación aterriza en él.
    ===================================================================== */
 const Game = {
@@ -630,8 +635,8 @@ const Game = {
   },
   reset(){
     this.build(); this.playing=false;
-    $("#btn-jugar").disabled=false; $("#btn-jugar").textContent="JUGAR 🎉";
-    $("#play-status").textContent="Toca JUGAR para comenzar";
+    $("#btn-jugar").disabled=false; $("#btn-jugar").textContent="PARTICIPAR";
+    $("#play-status").textContent="Toca PARTICIPAR para comenzar";
     this._fillBoard();
   },
   _fillBoard(winner){
@@ -645,8 +650,8 @@ const Game = {
     if(this.playing) return;
     if(!App.lead){ App.go("form"); return; }
     this.playing=true;
-    const btn=$("#btn-jugar"); btn.disabled=true; btn.textContent="Jugando…";
-    $("#play-status").textContent="🎲 Buscando tu número…";
+    const btn=$("#btn-jugar"); btn.disabled=true; btn.textContent="En la tómbola…";
+    $("#play-status").textContent="Asignando tu número…";
     Sound.spinStart();
 
     // 1) Lanzar la animación de suspenso mientras el servidor asigna el número.
@@ -833,7 +838,7 @@ const Admin = {
     const m={}; this.data.forEach(d=>{ const k=(d.rut||"").replace(/[.\-]/g,"").toUpperCase(); if(k) m[k]=(m[k]||0)+1; });
     return m;
   },
-  _incompleto(d){ return !d.nombre||!d.apellidos||!validaRut(d.rut||"")||!validaCel((d.celular||"").replace("+569",""))||!validaEmail(d.email||"")||!d.carrera; },
+  _incompleto(d){ return !d.nombre||!d.apellidos||!validaRut(d.rut||"")||!validaCel(String(d.celular||"").replace(/^\+?56/,""))||!validaEmail(d.email||"")||!d.carrera; },
   render(){
     const q=($("#q").value||"").toLowerCase().trim();
     const fe=$("#f-estado").value, fx=$("#f-extra").value;
