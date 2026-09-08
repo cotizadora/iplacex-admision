@@ -180,15 +180,34 @@ datalist{display:none}
 .stat b{display:block; font-size:24px; color:var(--azul)}
 .stat span{font-size:12px; color:var(--gris-tx); font-weight:600}
 .table-wrap{background:#fff; border-radius:14px; box-shadow:var(--sh); overflow:auto; max-height:64vh}
-table{border-collapse:collapse; width:100%; font-size:13.5px; min-width:920px}
-th,td{padding:11px 12px; text-align:left; border-bottom:1px solid var(--gris); white-space:nowrap}
-th{position:sticky; top:0; background:var(--navy); color:#fff; cursor:pointer; font-size:12.5px; z-index:1; user-select:none}
+table{border-collapse:separate; border-spacing:0; width:100%; font-size:13.5px; min-width:1050px}
+th,td{padding:12px 14px; text-align:left; border-bottom:1px solid #e8ecf7; white-space:nowrap; vertical-align:middle}
+th{position:sticky; top:0; background:var(--navy); color:#fff; cursor:pointer; z-index:2; user-select:none;
+  font-size:11px; letter-spacing:.09em; text-transform:uppercase; font-weight:700; padding:13px 14px}
 th:hover{background:var(--azul)}
-th .ar{opacity:.5; font-size:10px}
-tbody tr:hover{background:#f5f8ff}
-td.num{font-weight:900; color:var(--azul); font-size:16px}
-tr.dup{background:#fff7e6}
-tr.dup:hover{background:#fff0d0}
+th.noord{cursor:default} th.noord:hover{background:var(--navy)}
+th .ar{opacity:.55; font-size:9px; margin-left:3px}
+tbody tr:nth-child(even){background:#fafbff}
+tbody tr:hover{background:#eef3ff}
+td.num{font-weight:900; color:var(--azul); font-size:16.5px; text-align:center; letter-spacing:.02em}
+td.trunc{max-width:200px; overflow:hidden; text-overflow:ellipsis}
+td.fh{color:var(--gris-tx); font-size:12.5px}
+tr.dup{background:#fff7e6!important}
+tr.dup:hover{background:#fff0d0!important}
+/* acciones por fila */
+td.acc{white-space:nowrap; text-align:right}
+.iconbtn{border:1px solid var(--gris-2); background:#fff; border-radius:9px; padding:6px 9px; cursor:pointer;
+  font-size:14px; line-height:1; margin-left:5px; transition:.12s}
+.iconbtn:hover{border-color:var(--azul); background:#eef2ff; transform:translateY(-1px)}
+.iconbtn.wa:hover{border-color:#25D366; background:#e8fbf0}
+.copiado{background:#dcfce7!important; border-color:#22c55e!important}
+/* Último recurso de copiado (móviles que bloquean el portapapeles) */
+.copy-ov{position:fixed; inset:0; background:#060b22cc; z-index:95; display:flex; align-items:center; justify-content:center; padding:18px}
+.copy-box{background:#fff; border-radius:16px; padding:20px; max-width:480px; width:100%; box-shadow:var(--sh-lg)}
+.copy-box h3{margin:0 0 6px; color:var(--navy); font-size:18px}
+.copy-box p{margin:0 0 10px; font-size:13.5px; color:var(--gris-tx); line-height:1.5}
+.copy-box textarea{width:100%; height:210px; border:2px solid var(--gris-2); border-radius:10px;
+  padding:12px; font-size:13px; font-family:inherit; resize:vertical}
 .badge{display:inline-block; padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:700}
 .b-nuevo{background:#e7edff; color:var(--azul)} .b-contactado{background:#fff2cc; color:#8a6d00}
 .b-matriculado{background:#dcfce7; color:#166534} .b-descartado{background:#fee2e2; color:#991b1b}
@@ -364,7 +383,8 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
           <option value="inc">Solo incompletos</option>
           <option value="pend">Solo por sincronizar</option>
         </select>
-        <button class="btn sm" onclick="Admin.exportCsv()">⬇ Exportar CSV</button>
+        <button class="btn sm" onclick="Admin.copiarVisibles(this)">📋 Copiar lista</button>
+        <button class="btn sm ghost" onclick="Admin.exportCsv()">⬇ Exportar CSV</button>
       </div>
       <div class="table-wrap">
         <table id="tbl">
@@ -378,6 +398,7 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
             <th data-k="email">Email <span class="ar"></span></th>
             <th data-k="carrera">Carrera <span class="ar"></span></th>
             <th data-k="estado">Estado <span class="ar"></span></th>
+            <th class="noord">Acciones</th>
           </tr></thead>
           <tbody id="tbody"></tbody>
         </table>
@@ -869,18 +890,23 @@ const Admin = {
       const tr=document.createElement("tr"); if(isDup) tr.className="dup";
       const est=d.estado||"nuevo";
       const fh = d.fecha? (d.fecha+" "+(d.hora||"")) : (d.creado||"").replace("T"," ").slice(0,16);
+      const id=d.id||d.leadId;
       tr.innerHTML=
         `<td class="num">${d.numero||"—"}</td>`+
-        `<td>${fh}</td>`+
+        `<td class="fh">${fh}</td>`+
         `<td>${esc(d.nombre)}${d.provisional?'<span class="dup-tag">sync</span>':''}</td>`+
         `<td>${esc(d.apellidos)}</td>`+
         `<td>${esc(d.rut)}${isDup?'<span class="dup-tag">DUP</span>':''}</td>`+
         `<td>${esc(d.celular)}</td>`+
-        `<td>${esc(d.email)}</td>`+
-        `<td>${esc(d.carrera)}</td>`+
-        `<td><select class="estado" data-id="${d.id||d.leadId}">`+
+        `<td class="trunc" title="${esc(d.email)}">${esc(d.email)}</td>`+
+        `<td class="trunc" title="${esc(d.carrera)}">${esc(d.carrera)}</td>`+
+        `<td><select class="estado" data-id="${id}">`+
           estados.map(e=>`<option value="${e}" ${e===est?"selected":""}>${e[0].toUpperCase()+e.slice(1)}</option>`).join("")+
-        `</select></td>`;
+        `</select></td>`+
+        `<td class="acc">`+
+          `<button class="iconbtn" title="Copiar datos de esta persona" onclick="Admin.copiarUno('${id}',this)">📋</button>`+
+          `<button class="iconbtn wa" title="Escribirle por WhatsApp" onclick="Admin.escribirLead('${id}')">💬</button>`+
+        `</td>`;
       tb.appendChild(tr);
     });
     $$("#tbody select.estado").forEach(s=>s.addEventListener("change", async e=>{
@@ -891,6 +917,98 @@ const Admin = {
       this.render();
     }));
   },
+  /* ---- Copiar / contactar ------------------------------------------
+     El texto sale con formato de WhatsApp (*negrita*) para pegarlo tal cual. */
+  _filaTexto(d){
+    const iso = String(d.creado||"").replace("T"," ");
+    const fecha = d.fecha || iso.slice(0,10);
+    const hora  = d.hora  || iso.slice(11,16);
+    const nombre = `${d.nombre||""} ${d.apellidos||""}`.trim();
+    const est = (d.estado||"nuevo");
+    return [
+      `*${nombre}*`,
+      ``,
+      `Número de concurso: *${d.numero||"—"}*`,
+      ``,
+      `Fecha: ${fecha}`,
+      `Hora: ${hora}`,
+      ``,
+      `Nombre: ${nombre}`,
+      `RUT: ${d.rut||"—"}`,
+      `Celular: ${d.celular||"—"}`,
+      `Email: ${d.email||"—"}`,
+      `Carrera: ${d.carrera||"—"}`,
+      ``,
+      `Actividad: ${d.actividad||"Admisión IPLACEX"}`,
+      `Estado: ${est.charAt(0).toUpperCase()+est.slice(1)}`
+    ].join("\n");
+  },
+  _filasVisibles(){
+    // Respeta el orden, la búsqueda y los filtros que están aplicados en pantalla.
+    return Array.from(document.querySelectorAll("#tbody select.estado"))
+      .map(s=>this.data.find(d=>(d.id||d.leadId)===s.dataset.id))
+      .filter(Boolean);
+  },
+  async _alPortapapeles(txt, btn){
+    let ok=false;
+    try{ await navigator.clipboard.writeText(txt); ok=true; }catch(e){}
+    if(!ok){
+      // Respaldo para contextos que bloquean la API moderna (móviles, http).
+      const ta=document.createElement("textarea");
+      ta.value=txt; ta.setAttribute("readonly","");
+      ta.style.cssText="position:fixed;top:0;left:0;opacity:0";
+      document.body.appendChild(ta);
+      ta.focus(); ta.select(); ta.setSelectionRange(0, txt.length);
+      try{ ok=document.execCommand("copy"); }catch(e2){}
+      document.body.removeChild(ta);
+    }
+    if(ok){
+      if(btn){ const t=btn.textContent; btn.classList.add("copiado"); btn.textContent="✓";
+        setTimeout(()=>{ btn.classList.remove("copiado"); btn.textContent=t; },1200); }
+      toast("Copiado ✓ — pégalo en WhatsApp");
+    }else{
+      // Último recurso: mostrar el texto para copiarlo a mano. Nunca dejar al usuario sin salida.
+      this._mostrarParaCopiar(txt);
+    }
+    return ok;
+  },
+  _mostrarParaCopiar(txt){
+    const ov=document.createElement("div");
+    ov.className="copy-ov";
+    ov.innerHTML='<div class="copy-box"><h3>Copia el texto</h3>'+
+      '<p>Tu navegador no permitió copiar solo. Mantén presionado el texto, elige <b>Seleccionar todo</b> y <b>Copiar</b>.</p>'+
+      '<textarea readonly></textarea>'+
+      '<button class="btn sm" style="width:100%;margin-top:10px">Cerrar</button></div>';
+    ov.querySelector("textarea").value=txt;
+    ov.querySelector("button").onclick=()=>ov.remove();
+    ov.onclick=e=>{ if(e.target===ov) ov.remove(); };
+    document.body.appendChild(ov);
+    const ta=ov.querySelector("textarea"); ta.focus(); ta.select();
+  },
+  copiarUno(id, btn){
+    const d=this.data.find(x=>(x.id||x.leadId)===id); if(!d) return;
+    this._alPortapapeles(this._filaTexto(d), btn);
+  },
+  copiarVisibles(btn){
+    const rows=this._filasVisibles();
+    if(!rows.length){ toast("No hay registros para copiar"); return; }
+    const hoy=new Date().toLocaleDateString("es-CL");
+    const sep="\n\n━━━━━━━━━━━━━━━\n\n";
+    const txt = `*LEADS ADMISIÓN IPLACEX*\n${rows.length} registro(s) · ${hoy}`+
+      sep + rows.map(d=>this._filaTexto(d)).join(sep);
+    this._alPortapapeles(txt, btn);
+  },
+  // Abre WhatsApp hacia el postulante (no hacia la ejecutiva).
+  escribirLead(id){
+    const d=this.data.find(x=>(x.id||x.leadId)===id); if(!d) return;
+    const num=String(d.celular||"").replace(/\D/g,"");
+    if(num.length<11){ toast("Ese registro no tiene un celular válido"); return; }
+    const saludo=`Hola ${d.nombre||""}, te escribo de Admisión IPLACEX. `+
+      `Participaste con el número ${d.numero||""} y me dejaste tu interés en ${d.carrera||"nuestras carreras"}. `+
+      `¿Te parece si conversamos?`;
+    window.open("https://wa.me/"+num+"?text="+encodeURIComponent(saludo),"_blank");
+  },
+
   exportCsv(){
     const cols=["numero","fecha","hora","nombre","apellidos","rut","celular","email","carrera","estado","id"];
     const head=["N Concurso","Fecha","Hora","Nombre","Apellidos","RUT","Celular","Email","Carrera","Estado","ID"];
