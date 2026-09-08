@@ -171,8 +171,9 @@ h2{font-size:20px; margin:0 0 4px; letter-spacing:-.01em}
 .hero-badge{display:inline-flex; align-items:center; gap:8px; background:var(--azul-suave); color:var(--azul);
   font-weight:700; font-size:12.5px; padding:7px 12px; border-radius:999px; letter-spacing:.02em}
 /* El logo va limpio sobre la tarjeta: sin caja dentro de otra caja. */
-.hero-logo{margin:22px 0 20px; display:flex; align-items:center; justify-content:center}
-.hero-logo img{height:58px; width:auto}
+.hero-logo{margin:24px 0 22px; display:flex; align-items:center; justify-content:center}
+/* Se dimensiona por ancho para que escale con la tarjeta en cualquier teléfono. */
+.hero-logo img{width:min(72%,270px); height:auto}
 /* En la portada el logo grande manda: se oculta el pequeño del encabezado */
 body.on-hero .brand{display:none}
 .steps{display:flex; gap:8px; margin:14px 0 4px; justify-content:center; flex-wrap:wrap}
