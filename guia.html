@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="theme-color" content="#12163A">
+<meta name="description" content="Guía de uso de la plataforma de captación en terreno: el flujo completo, los enlaces y qué hacer si algo falla.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Manual de Terreno · Admisión IPLACEX">
+<meta property="og:description" content="El flujo completo, todos los enlaces y qué hacer si algo falla.">
+<meta property="og:image" content="https://cotizadora.github.io/iplacex-admision/assets/og.jpg">
+<meta property="og:url" content="https://cotizadora.github.io/iplacex-admision/guia.html">
+<link rel="icon" href="assets/iplacex-logo.svg">
+<title>Manual de Terreno</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --tinta:#12163A; --tinta-2:#4A5568;
+  --fondo:#F7F8FB; --papel:#FFFFFF; --linea:#E1E5EF; --linea-2:#EEF1F7;
+  --azul:#000080; --enlace:#1C6FC9; --azul-suave:#E9EDF8;
+  --oro:#9A6B12; --oro-fondo:#FBF3E2;
+  --ok:#2F7D55; --ok-fondo:#E8F5EE;
+  --alerta:#C0392F; --alerta-fondo:#FCEDEC;
+  --wa:#1E7A4C;
+  --display:"Montserrat",system-ui,sans-serif;
+  --texto:"IBM Plex Sans",system-ui,sans-serif;
+  --dato:"IBM Plex Mono",ui-monospace,monospace;
+  --sh:0 1px 2px rgba(18,22,58,.06),0 6px 18px -10px rgba(18,22,58,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --tinta:#EDF0F8; --tinta-2:#A6AEC4;
+    --fondo:#0C1024; --papel:#151A33; --linea:#2A3152; --linea-2:#222941;
+    --azul:#7FA3FF; --enlace:#7CB8F5; --azul-suave:#1C2445;
+    --oro:#E8B75A; --oro-fondo:#2E2413;
+    --ok:#6FD79B; --ok-fondo:#12301F;
+    --alerta:#F08B82; --alerta-fondo:#341A18;
+    --wa:#5FD79B;
+    --sh:0 1px 2px rgba(0,0,0,.4),0 8px 22px -12px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --tinta:#EDF0F8; --tinta-2:#A6AEC4;
+  --fondo:#0C1024; --papel:#151A33; --linea:#2A3152; --linea-2:#222941;
+  --azul:#7FA3FF; --enlace:#7CB8F5; --azul-suave:#1C2445;
+  --oro:#E8B75A; --oro-fondo:#2E2413;
+  --ok:#6FD79B; --ok-fondo:#12301F;
+  --alerta:#F08B82; --alerta-fondo:#341A18;
+  --wa:#5FD79B;
+  --sh:0 1px 2px rgba(0,0,0,.4),0 8px 22px -12px rgba(0,0,0,.7);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font-family:var(--texto);
+  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.env{max-width:820px;margin:0 auto;padding:36px 20px 80px}
+a{color:var(--enlace)}
+:focus-visible{outline:3px solid var(--enlace);outline-offset:3px;border-radius:6px}
+
+/* ---- Encabezado ---- */
+.cab{border-bottom:2px solid var(--tinta);padding-bottom:20px;margin-bottom:8px}
+.marca{font-family:var(--dato);font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--tinta-2);display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.marca b{color:var(--azul);font-weight:600}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(30px,6vw,42px);line-height:1.08;
+  letter-spacing:-.02em;margin:14px 0 10px;text-wrap:balance}
+.bajada{font-size:17px;color:var(--tinta-2);max-width:62ch;margin:0}
+
+/* ---- Enlaces: lo primero, porque es lo que más va a buscar ---- */
+.enlaces{display:grid;gap:10px;margin:28px 0 40px}
+.liga{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
+  background:var(--papel);border:1px solid var(--linea);border-radius:10px;
+  padding:15px 17px;text-decoration:none;color:inherit;box-shadow:var(--sh);
+  transition:border-color .15s,transform .15s}
+.liga:hover{border-color:var(--enlace);transform:translateY(-1px)}
+.liga .ic{width:38px;height:38px;border-radius:9px;background:var(--azul-suave);
+  display:grid;place-items:center;color:var(--azul)}
+.liga .ic svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.9;
+  stroke-linecap:round;stroke-linejoin:round}
+.liga .tit{font-family:var(--display);font-weight:600;font-size:15.5px;display:block}
+.liga .sub{font-family:var(--dato);font-size:12px;color:var(--tinta-2);word-break:break-all}
+.liga .fl{color:var(--tinta-2);font-size:19px}
+.liga.destaca{border-color:var(--azul);border-width:2px}
+
+/* ---- Secciones ---- */
+h2{font-family:var(--display);font-weight:700;font-size:23px;letter-spacing:-.01em;
+  margin:52px 0 6px;padding-top:22px;border-top:1px solid var(--linea)}
+h2:first-of-type{border-top:0}
+.intro{color:var(--tinta-2);margin:0 0 22px;max-width:64ch}
+h3{font-family:var(--display);font-weight:600;font-size:16.5px;margin:26px 0 8px}
+p{max-width:66ch}
+
+/* ---- Los pasos: aquí el número SÍ es información, es una secuencia ---- */
+.pasos{list-style:none;padding:0;margin:0;display:grid;gap:2px}
+.paso{display:grid;grid-template-columns:44px 1fr;gap:16px;padding:16px 0;
+  border-bottom:1px solid var(--linea-2);align-items:start}
+.paso:last-child{border-bottom:0}
+.n{font-family:var(--dato);font-weight:600;font-size:13px;color:var(--azul);
+  background:var(--azul-suave);border-radius:8px;height:30px;display:grid;place-items:center}
+.paso .qh{font-family:var(--display);font-weight:600;font-size:16px;margin:2px 0 3px}
+.paso .qd{color:var(--tinta-2);font-size:14.5px;margin:0;max-width:60ch}
+.quien{display:inline-block;font-family:var(--dato);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;padding:2px 7px;border-radius:5px;margin-left:8px;vertical-align:2px}
+.q-post{background:var(--azul-suave);color:var(--azul)}
+.q-sis{background:var(--ok-fondo);color:var(--ok)}
+.q-san{background:var(--oro-fondo);color:var(--oro)}
+
+/* ---- Mensaje de WhatsApp: lo que ella recibe de verdad ---- */
+.wa{background:var(--papel);border:1px solid var(--linea);border-radius:12px;
+  padding:6px;max-width:400px;box-shadow:var(--sh)}
+.wa .burbuja{background:var(--ok-fondo);border-radius:9px;padding:13px 15px;
+  font-size:13.5px;line-height:1.62;white-space:pre-wrap;font-family:var(--texto)}
+.wa .burbuja b{color:var(--tinta)}
+.wa .num{font-family:var(--dato);font-weight:600;color:var(--oro);font-size:15px}
+.pie-wa{font-family:var(--dato);font-size:11px;color:var(--tinta-2);text-align:right;padding:5px 9px 3px}
+
+/* ---- Tarjetas de dato ---- */
+.datos{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px;margin:20px 0}
+.dato{background:var(--papel);border:1px solid var(--linea);border-radius:10px;padding:14px 16px}
+.dato .et{font-family:var(--dato);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--tinta-2);display:block;margin-bottom:5px}
+.dato .vl{font-family:var(--dato);font-size:15px;font-weight:600;word-break:break-all}
+
+/* ---- Avisos ---- */
+.aviso{border-left:3px solid var(--alerta);background:var(--alerta-fondo);
+  padding:14px 17px;border-radius:0 9px 9px 0;margin:20px 0;font-size:14.5px}
+.aviso.bien{border-color:var(--ok);background:var(--ok-fondo)}
+.aviso .t{font-family:var(--display);font-weight:600;display:block;margin-bottom:3px}
+.aviso p{margin:0;max-width:62ch}
+
+/* ---- Preguntas ---- */
+.faq{border-top:1px solid var(--linea-2)}
+.faq details{border-bottom:1px solid var(--linea-2)}
+.faq summary{cursor:pointer;padding:15px 0;font-family:var(--display);font-weight:600;
+  font-size:15.5px;list-style:none;display:flex;justify-content:space-between;gap:14px;align-items:center}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font-family:var(--dato);color:var(--enlace);font-size:19px;flex:0 0 auto}
+.faq details[open] summary::after{content:"−"}
+.faq .rta{padding:0 0 17px;color:var(--tinta-2);font-size:14.5px}
+.faq .rta p{margin:0 0 9px}
+.faq .rta p:last-child{margin:0}
+
+code{font-family:var(--dato);font-size:.9em;background:var(--azul-suave);
+  padding:1.5px 5px;border-radius:4px;color:var(--azul)}
+.pie{margin-top:60px;padding-top:20px;border-top:1px solid var(--linea);
+  font-size:13px;color:var(--tinta-2)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:520px){
+  .liga{grid-template-columns:auto 1fr;gap:12px}
+  .liga .fl{display:none}
+  .paso{grid-template-columns:34px 1fr;gap:12px}
+}
+</style>
+</head>
+<body>
+
+<div class="env">
+
+<header class="cab">
+  <div class="marca"><b>Admisión IPLACEX</b> <span>·</span> <span>Herramienta de apoyo en terreno</span></div>
+  <h1>Manual de terreno</h1>
+  <p class="bajada">Cómo funciona la plataforma de captación, qué hace cada persona y dónde está cada cosa. Guárdalo en favoritos: todo lo que necesitas sale de esta página.</p>
+</header>
+
+<nav class="enlaces" aria-label="Enlaces principales">
+  <a class="liga destaca" href="https://cotizadora.github.io/iplacex-admision/" target="_blank" rel="noopener">
+    <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM19 19h2v2h-2z"/></svg></span>
+    <span><span class="tit">Formulario del postulante</span><span class="sub">cotizadora.github.io/iplacex-admision/</span></span>
+    <span class="fl">→</span>
+  </a>
+  <a class="liga" href="https://cotizadora.github.io/iplacex-admision/#admin" target="_blank" rel="noopener">
+    <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18M9 9v11"/></svg></span>
+    <span><span class="tit">Tu panel de leads</span><span class="sub">…/iplacex-admision/#admin</span></span>
+    <span class="fl">→</span>
+  </a>
+  <a class="liga" href="https://docs.google.com/spreadsheets/d/1a_wh2PqOqmwEIj6dv85gkOhUkRo6jeWiEhxFLVCBolM/edit" target="_blank" rel="noopener">
+    <span class="ic"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg></span>
+    <span><span class="tit">Planilla histórica</span><span class="sub">Google Sheets · IPLACEX - Leads Admisión</span></span>
+    <span class="fl">→</span>
+  </a>
+  <a class="liga" href="https://cotizadora.github.io/iplacex-admision/qr.html" target="_blank" rel="noopener">
+    <span class="ic"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span>
+    <span><span class="tit">Generar el código QR</span><span class="sub">…/iplacex-admision/qr.html</span></span>
+    <span class="fl">→</span>
+  </a>
+</nav>
+
+<h2>Qué resuelve</h2>
+<p class="intro">En una actividad llegan varios interesados a la vez y anotar a mano los datos de cada uno toma tiempo que podrías estar usando para conversar. Aquí el postulante se registra solo desde su teléfono, y tú recibes el lead ya escrito.</p>
+
+<div class="aviso bien">
+  <span class="t">Lo importante</span>
+  <p>Los datos quedan guardados apenas la persona participa. Aunque no te envíe el WhatsApp, aunque cierre el navegador o se quede sin señal, ese lead está en tu planilla.</p>
+</div>
+
+<h2>El flujo completo</h2>
+<p class="intro">Ocho pasos, en este orden. Los tres primeros los hace el postulante en su teléfono; tú apareces al final.</p>
+
+<ol class="pasos">
+  <li class="paso"><span class="n">01</span><div>
+    <p class="qh">Muestras el QR <span class="quien q-san">Tú</span></p>
+    <p class="qd">Impreso en un pendón, en una tarjeta plastificada o en la pantalla de tu computador. Es siempre el mismo: no cambia entre actividades.</p></div></li>
+  <li class="paso"><span class="n">02</span><div>
+    <p class="qh">Escanea con su cámara <span class="quien q-post">Postulante</span></p>
+    <p class="qd">No instala nada ni crea una cuenta. Se abre la página directamente.</p></div></li>
+  <li class="paso"><span class="n">03</span><div>
+    <p class="qh">Completa sus datos <span class="quien q-post">Postulante</span></p>
+    <p class="qd">Nombre, apellidos, RUT, celular, email y la carrera que le interesa. El RUT se valida solo: si el dígito verificador está malo, no lo deja avanzar. También autoriza que lo contactes.</p></div></li>
+  <li class="paso"><span class="n">04</span><div>
+    <p class="qh">Participa en la tómbola <span class="quien q-post">Postulante</span></p>
+    <p class="qd">Presiona PARTICIPAR y una cuadrícula de 100 casillas se ilumina hasta detenerse en una. Es el gancho para que se acerque y participe.</p></div></li>
+  <li class="paso"><span class="n">05</span><div>
+    <p class="qh">El servidor le asigna el número <span class="quien q-sis">Sistema</span></p>
+    <p class="qd">El número lo decide el servidor, no el teléfono: nadie puede elegirse el suyo. Y no se repite entre participantes.</p></div></li>
+  <li class="paso"><span class="n">06</span><div>
+    <p class="qh">El lead queda registrado <span class="quien q-sis">Sistema</span></p>
+    <p class="qd">En este punto ya está guardado en la planilla, con fecha y hora reales. Lo que viene después es solo aviso.</p></div></li>
+  <li class="paso"><span class="n">07</span><div>
+    <p class="qh">Te envía el resultado por WhatsApp <span class="quien q-post">Postulante</span></p>
+    <p class="qd">Un botón abre WhatsApp con el mensaje ya escrito hacia tu número. Solo tiene que apretar enviar.</p></div></li>
+  <li class="paso"><span class="n">08</span><div>
+    <p class="qh">Gestionas desde el panel <span class="quien q-san">Tú</span></p>
+    <p class="qd">Después de la actividad entras al panel, ves a todos ordenados, los llamas y les vas cambiando el estado.</p></div></li>
+</ol>
+
+<h2>El mensaje que vas a recibir</h2>
+<p class="intro">Así llega a tu WhatsApp. El número va primero y en negrita, porque es lo que usarás para el sorteo.</p>
+
+<div class="wa">
+  <div class="burbuja">🎯 <b>NÚMERO DE CONCURSO: <span class="num">4878</span></b>
+━━━━━━━━━━━━━━━
+📅 Fecha: 08-09-2026
+🕐 Hora: 16:12
+
+👤 <b>DATOS DEL POSTULANTE</b>
+Nombre: Valentina
+Apellidos: Rojas Pinto
+RUT: 19.888.777-3
+Celular: +56956781234
+Email: valentina.rojas@gmail.com
+Carrera de interés: Técnico en Enfermería
+━━━━━━━━━━━━━━━
+<i>Admisión IPLACEX</i></div>
+  <div class="pie-wa">Ejemplo · 16:12 ✓✓</div>
+</div>
+
+<h2>Tu panel de leads</h2>
+<p class="intro">Entra a la dirección del formulario y agrega <code>#admin</code> al final. También hay un enlace discreto abajo de la portada que dice «Acceso ejecutiva».</p>
+
+<div class="datos">
+  <div class="dato"><span class="et">Usuario y contraseña</span><span class="vl">los que te pasó Eduardo</span></div>
+  <div class="dato"><span class="et">WhatsApp que recibe</span><span class="vl">+56 9 4968 3594</span></div>
+</div>
+
+<h3>Qué puedes hacer ahí</h3>
+<ul>
+  <li><b>Buscar</b> por nombre, RUT, email o número.</li>
+  <li><b>Ordenar</b> por cualquier columna: haz clic en su título.</li>
+  <li><b>Filtrar</b> por estado, duplicados, incompletos.</li>
+  <li><b>Cambiar el estado</b> de cada lead: nuevo → contactado → matriculado o descartado.</li>
+  <li><b>Copiar los datos</b> de una persona con el botón 📋, listos para pegar en WhatsApp.</li>
+  <li><b>Escribirle directo</b> con el botón 💬: abre WhatsApp con un saludo ya redactado.</li>
+  <li><b>Exportar a CSV</b> para abrirlo en Excel.</li>
+</ul>
+
+<p>Los RUT repetidos salen <b>marcados en amarillo</b> con la etiqueta DUP, para que no llames dos veces a la misma persona.</p>
+
+<h2>La planilla</h2>
+<p class="intro">Es la misma información que el panel, pero en Google Sheets. Sirve cuando quieres trabajar los datos a tu manera, hacer tus propios filtros o descargarlos.</p>
+<p>Está en tu Google Drive con el nombre <b>IPLACEX - Leads Admisión (Sandra)</b>. Tiene un menú propio arriba, <b>IPLACEX</b>: marca una fila, elige «Copiar fila seleccionada» y te entrega los datos ordenados para pegar en WhatsApp.</p>
+
+<div class="aviso">
+  <span class="t">No compartas el enlace de la planilla</span>
+  <p>Contiene el RUT, teléfono y correo de todos tus postulantes. Quien reciba ese enlace ve todo. Para compartir la actividad usa el QR o el enlace del formulario.</p>
+</div>
+
+<h2>Antes de cada actividad</h2>
+<ol class="pasos">
+  <li class="paso"><span class="n">01</span><div>
+    <p class="qh">Prueba el QR con tu propio teléfono</p>
+    <p class="qd">Escanéalo y llega hasta el final. Toma treinta segundos y te evita descubrir un problema con gente esperando.</p></div></li>
+  <li class="paso"><span class="n">02</span><div>
+    <p class="qh">Revisa que el WhatsApp llegue</p>
+    <p class="qd">Con esa misma prueba, confirma que el mensaje entra a tu teléfono.</p></div></li>
+  <li class="paso"><span class="n">03</span><div>
+    <p class="qh">Borra el registro de prueba</p>
+    <p class="qd">Abre la planilla y elimina esa fila, para partir la actividad en limpio.</p></div></li>
+</ol>
+
+<h2>Si algo falla</h2>
+<div class="faq">
+  <details><summary>La persona no puede abrir el QR</summary>
+    <div class="rta"><p>Suele ser señal. Dile que se acerque a una zona con mejor cobertura, o dale el enlace escrito para que lo copie.</p></div></details>
+  <details><summary>Llenó el formulario pero no me llegó el WhatsApp</summary>
+    <div class="rta"><p>No importa: <b>el lead ya está guardado</b>. Entra al panel y ahí aparece. El WhatsApp es solo un aviso, no es la base de datos.</p></div></details>
+  <details><summary>Se cayó el internet en medio de la tómbola</summary>
+    <div class="rta"><p>Los datos quedan guardados en su teléfono y se envían solos cuando vuelve la señal. El número se le asigna en ese momento, no antes.</p></div></details>
+  <details><summary>Alguien participó dos veces</summary>
+    <div class="rta"><p>Si recargó la página, el sistema le devuelve el mismo número y no crea otra fila. Si de verdad llenó el formulario dos veces, verás su RUT marcado con la etiqueta DUP en el panel.</p></div></details>
+  <details><summary>Entré al panel y me pide la clave otra vez</summary>
+    <div class="rta"><p>Es normal: la sesión dura mientras la pestaña esté abierta. Si la cierras o el teléfono la descarta, hay que volver a entrar.</p></div></details>
+  <details><summary>El panel dice que la clave está mala y sé que no</summary>
+    <div class="rta"><p>Tras varios intentos fallidos el acceso se bloquea quince minutos, como protección. Espera ese rato y vuelve a intentar.</p></div></details>
+  <details><summary>No veo los últimos registros</summary>
+    <div class="rta"><p>En el panel usa el botón «Actualizar». En la planilla, recarga con F5.</p></div></details>
+</div>
+
+<h2>Sobre los datos de las personas</h2>
+<p class="intro">Estás pidiendo RUT, teléfono y correo, que en Chile son datos personales protegidos. Conviene que sepas cómo queda cubierto.</p>
+<p>Antes de participar, cada postulante marca una casilla donde autoriza expresamente que lo contactes. Esa autorización se guarda con fecha y hora en la planilla, en la columna <code>consent</code>. Es tu respaldo si alguien alguna vez reclama.</p>
+<p>La planilla vive en un Google Drive personal, no en sistemas de IPLACEX. Úsala solo para gestionar tus postulaciones y no la compartas con terceros.</p>
+
+<div class="pie">
+  <p>Herramienta de apoyo a la gestión de admisión. Desarrollada por Eduardo Pérez.<br>
+  Ante cualquier duda o si algo deja de funcionar, escríbele a él.</p>
+</div>
+
+</div>
+
+</body>
+</html>
