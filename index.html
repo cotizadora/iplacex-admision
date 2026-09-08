@@ -5,8 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
 <meta name="theme-color" content="#0a1a5c">
 <meta name="robots" content="noindex,nofollow">
-<title>IPLACEX · Admisión</title>
+<title>Admisión IPLACEX · Postula y participa</title>
+<meta name="description" content="Completa tus datos, participa en la tómbola y obtén tu número de concurso. Un ejecutivo de admisión te contactará.">
 <link rel="icon" href="assets/iplacex-logo.svg">
+
+<!-- Vista previa al compartir el enlace (WhatsApp, Facebook, LinkedIn, Telegram) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Admisión IPLACEX">
+<meta property="og:locale" content="es_CL">
+<meta property="og:url" content="https://cotizadora.github.io/iplacex-admision/">
+<meta property="og:title" content="Admisión IPLACEX · Postula y participa">
+<meta property="og:description" content="Completa tus datos, participa en la tómbola y obtén tu número de concurso. Un ejecutivo de admisión te contactará.">
+<meta property="og:image" content="https://cotizadora.github.io/iplacex-admision/assets/og.jpg">
+<meta property="og:image:secure_url" content="https://cotizadora.github.io/iplacex-admision/assets/og.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Postula y participa por un premio — Admisión IPLACEX">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Admisión IPLACEX · Postula y participa">
+<meta name="twitter:description" content="Completa tus datos, participa en la tómbola y obtén tu número de concurso.">
+<meta name="twitter:image" content="https://cotizadora.github.io/iplacex-admision/assets/og.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
@@ -718,7 +737,8 @@ Celular: ${l.celular}
 Email: ${l.email}
 Carrera de interés: ${l.carrera}
 ━━━━━━━━━━━━━━━
-_Enviado desde Admisión IPLACEX_`);
+_Admisión IPLACEX_
+${location.href.split("#")[0]}`);
   },
   sendWhatsApp(){
     const url="https://wa.me/"+CFG.WHATSAPP+"?text="+encodeURIComponent(this.waMessage());
