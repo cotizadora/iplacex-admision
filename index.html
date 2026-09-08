@@ -862,6 +862,45 @@ const Game = {
     const b=$("#board"); if(this.cells.length){return;}
     b.innerHTML="";
     for(let i=0;i<this.N;i++){ const c=document.createElement("div"); c.className="cell"; b.appendChild(c); this.cells.push(c); }
+    this.rutas = this._construirRutas();
+  },
+
+  /* Recorridos posibles de la luz. Alternar entre ellos es lo que hace que
+     el movimiento no se lea como una simple vuelta en círculo. */
+  _construirRutas(){
+    const C=this.cols, F=this.N/this.cols, ix=(f,c)=>f*C+c;
+
+    // Espiral de afuera hacia adentro
+    const espiral=[]; let t=0,b=F-1,l=0,r=C-1;
+    while(t<=b && l<=r){
+      for(let c=l;c<=r;c++) espiral.push(ix(t,c)); t++;
+      for(let f=t;f<=b;f++) espiral.push(ix(f,r)); r--;
+      if(t<=b){ for(let c=r;c>=l;c--) espiral.push(ix(b,c)); b--; }
+      if(l<=r){ for(let f=b;f>=t;f--) espiral.push(ix(f,l)); l++; }
+    }
+    // Serpiente: fila a fila, alternando el sentido
+    const serpiente=[];
+    for(let f=0;f<F;f++){
+      for(let c=0;c<C;c++) serpiente.push(ix(f, f%2 ? C-1-c : c));
+    }
+    // Diagonales
+    const diagonal=[];
+    for(let d=0; d<F+C-1; d++){
+      for(let f=0; f<F; f++){ const c=d-f; if(c>=0 && c<C) diagonal.push(ix(f,c)); }
+    }
+    // Desordenada
+    const azar=[...Array(this.N).keys()];
+    for(let i=azar.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [azar[i],azar[j]]=[azar[j],azar[i]]; }
+
+    return [espiral, serpiente, diagonal, azar, [...espiral].reverse()];
+  },
+
+  /* Enciende una celda dejando una estela corta detrás. */
+  _encender(i, estela){
+    this.cells.forEach(c=>c.classList.remove("lit","trail"));
+    (estela||[]).forEach(j=>this.cells[j].classList.add("trail"));
+    this.cells[i].classList.add("lit");
+    this.ultimo=i;
   },
   reset(){
     this.build(); this.playing=false;
@@ -885,19 +924,29 @@ const Game = {
     Sound.spinStart();
 
     // 1) Lanzar la animación de suspenso mientras el servidor asigna el número.
-    let stop=false, idx=0, delay=45;
+    let stop=false, delay=48;
     const clearAll=()=>this.cells.forEach(c=>c.classList.remove("lit","trail"));
+    const estela=[];
     const spin = async ()=>{
-      const started=Date.now();
+      const t0=Date.now();
+      let ruta=this.rutas[Math.floor(Math.random()*this.rutas.length)];
+      let pos=Math.floor(Math.random()*ruta.length);
+      let restanEnRuta=12+Math.floor(Math.random()*14);
       while(!stop){
-        clearAll();
-        this.cells[idx%this.N].classList.add("lit");
-        this.cells[(idx-1+this.N)%this.N].classList.add("trail");
+        const i=ruta[pos%ruta.length];
+        estela.unshift(i); if(estela.length>3) estela.pop();
+        this._encender(i, estela.slice(1));
         Sound.tick();
-        idx=(idx+ (1+Math.floor(Math.random()*2)) )%this.N;
+        pos++;
+        // Cada cierto tramo cambia de recorrido: de espiral a desordenado,
+        // de diagonal a serpiente. Ahí es donde deja de verse mecánico.
+        if(--restanEnRuta<=0){
+          ruta=this.rutas[Math.floor(Math.random()*this.rutas.length)];
+          pos=Math.floor(Math.random()*ruta.length);
+          restanEnRuta=12+Math.floor(Math.random()*14);
+        }
         await new Promise(r=>setTimeout(r,delay));
-        // acelera al principio
-        if(Date.now()-started<700 && delay>28) delay-=3;
+        if(Date.now()-t0<700 && delay>26) delay-=3;   // acelera al partir
       }
     };
     const spinP = menosMovimiento() ? Promise.resolve() : spin();
@@ -927,7 +976,7 @@ const Game = {
     }else{
       await new Promise(r=>setTimeout(r,900));      // mínimo de suspenso
       stop=true; await spinP;
-      await this._land(idx%this.N, target);
+      await this._land(target);
     }
 
     // 4) Revelar
@@ -946,19 +995,26 @@ const Game = {
     const res = await Api.registrar(App.lead);
     return res;
   },
-  async _land(from, target){
-    // recorre desacelerando desde 'from' hasta 'target'
-    let i=from, delay=40; const path=[];
-    while(i!==target){ i=(i+1)%this.N; path.push(i); }
-    // asegura al menos una vuelta para que se note la desaceleración
-    if(path.length<14){ for(let k=0;k<this.N;k++) path.unshift((target - k -1 + this.N)%this.N); }
-    for(let k=0;k<path.length;k++){
-      this.cells.forEach(c=>c.classList.remove("lit","trail"));
-      this.cells[path[k]].classList.add("lit");
+  /* Frena recorriendo una espiral que TERMINA en la celda ganadora:
+     se cierra hacia el premio en vez de detenerse de golpe. */
+  async _land(target){
+    const ruta=this.rutas[0];                       // la espiral
+    const p=ruta.indexOf(target);
+    const largo=18;
+    const camino=[];
+    for(let k=largo;k>0;k--) camino.push(ruta[(p-k+ruta.length*2)%ruta.length]);
+    camino.push(target);
+
+    const estela=[];
+    let delay=34;
+    for(let k=0;k<camino.length;k++){
+      const i=camino[k];
+      estela.unshift(i); if(estela.length>3) estela.pop();
+      this._encender(i, estela.slice(1));
       Sound.tick();
       await new Promise(r=>setTimeout(r,delay));
-      const remaining=path.length-k;
-      if(remaining<18) delay+=Math.max(6, (18-remaining)*3); // desacelera
+      const faltan=camino.length-k;
+      if(faltan<12) delay+=Math.max(7,(12-faltan)*4);   // desacelera al final
     }
   }
 };
