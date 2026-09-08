@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IPLACEX · Generar QR de la actividad</title>
+<style>
+  :root{--azul:#3333FF;--navy:#0a1a5c}
+  body{font-family:"Segoe UI",system-ui,sans-serif;margin:0;background:#0a1a5c;color:#fff;
+    min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{background:#fff;color:#131a33;border-radius:20px;max-width:440px;width:100%;
+    padding:26px;box-shadow:0 24px 60px -20px #000a;text-align:center}
+  h1{font-size:22px;margin:0 0 4px;color:var(--navy)}
+  p{color:#5a6280;font-size:14px;line-height:1.5}
+  input{width:100%;border:2px solid #d7ddec;border-radius:12px;padding:14px;font-size:15px;margin:12px 0;box-sizing:border-box}
+  input:focus{outline:none;border-color:var(--azul)}
+  button{background:linear-gradient(135deg,var(--azul),#2a2ae6);color:#fff;border:0;border-radius:12px;
+    padding:14px 18px;font-size:16px;font-weight:800;cursor:pointer;width:100%}
+  #qr{margin:18px auto 8px;min-height:260px;display:flex;align-items:center;justify-content:center}
+  #qr canvas,#qr img{border-radius:8px}
+  small{color:#8a90a8}
+  .actions{display:flex;gap:8px;margin-top:10px}
+  .actions button{flex:1;font-size:14px;padding:12px}
+  .ghost{background:#fff!important;color:var(--azul)!important;box-shadow:inset 0 0 0 2px #d7ddec}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>QR de la actividad</h1>
+    <p>Pega la dirección pública de la plataforma (donde subiste <b>index.html</b>) y genera el código QR para mostrar o imprimir en terreno.</p>
+    <input id="url" type="url" placeholder="https://tu-usuario.github.io/iplacex-admision/" value="">
+    <button onclick="gen()">Generar QR</button>
+    <div id="qr"><small>El QR aparecerá aquí…</small></div>
+    <div class="actions">
+      <button class="ghost" onclick="descargar()">⬇ Descargar PNG</button>
+      <button class="ghost" onclick="window.print()">🖨 Imprimir</button>
+    </div>
+    <small>Consejo: imprime el QR en tamaño grande y llévalo plastificado.</small>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+  let last=null;
+  function gen(){
+    const url=document.getElementById('url').value.trim();
+    if(!/^https?:\/\//.test(url)){ alert('Pega una dirección que empiece con https://'); return; }
+    const box=document.getElementById('qr'); box.innerHTML='';
+    last=new QRCode(box,{text:url,width:260,height:260,colorDark:'#0a1a5c',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel.H});
+  }
+  function descargar(){
+    const cv=document.querySelector('#qr canvas'); const img=document.querySelector('#qr img');
+    const src = cv? cv.toDataURL('image/png') : (img? img.src : null);
+    if(!src){ alert('Primero genera el QR.'); return; }
+    const a=document.createElement('a'); a.href=src; a.download='qr-iplacex.png'; a.click();
+  }
+</script>
+</body>
+</html>
