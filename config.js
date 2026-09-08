@@ -17,8 +17,9 @@ window.IPLACEX_CONFIG = {
 
   // 3) Rango de números del sorteo (pool). El backend entrega un número
   //    ÚNICO tomado de este rango; ningún participante recibe el mismo.
+  // Tope diario del sorteo: cada jornada reparte del 0001 al 1000.
   NUMERO_MIN: 1,
-  NUMERO_MAX: 9999,
+  NUMERO_MAX: 1000,
 
   // 4) Texto de la actividad (aparece en el encabezado del formulario).
   ACTIVIDAD: "Admisión IPLACEX",
