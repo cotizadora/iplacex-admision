@@ -170,10 +170,9 @@ h2{font-size:20px; margin:0 0 4px; letter-spacing:-.01em}
 #s-hero .card{background:var(--papel)}
 .hero-badge{display:inline-flex; align-items:center; gap:8px; background:var(--azul-suave); color:var(--azul);
   font-weight:700; font-size:12.5px; padding:7px 12px; border-radius:999px; letter-spacing:.02em}
-.hero-logo{margin:20px 0 18px; padding:26px 20px; border-radius:var(--radius);
-  background:var(--navy);
-  box-shadow:0 14px 30px -14px var(--navy); display:flex; align-items:center; justify-content:center}
-.hero-logo img{height:62px; width:auto; filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
+/* El logo va limpio sobre la tarjeta: sin caja dentro de otra caja. */
+.hero-logo{margin:22px 0 20px; display:flex; align-items:center; justify-content:center}
+.hero-logo img{height:58px; width:auto}
 /* En la portada el logo grande manda: se oculta el pequeño del encabezado */
 body.on-hero .brand{display:none}
 .steps{display:flex; gap:8px; margin:14px 0 4px; justify-content:center; flex-wrap:wrap}
@@ -363,7 +362,7 @@ select.estado{border:1px solid var(--gris-2); border-radius:8px; padding:5px 8px
   <section class="screen active" id="s-hero">
     <div class="card center">
       <span class="hero-badge"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 9 12 5 2 9l10 4 10-4z"/><path d="M6 11v5c0 1.5 2.7 3 6 3s6-1.5 6-3v-5"/></svg> Postulación en terreno</span>
-      <div class="hero-logo"><img src="assets/iplacex-logo.svg" alt="IPLACEX"></div>
+      <div class="hero-logo"><img src="assets/iplacex-logo-navy.svg" alt="IPLACEX"></div>
       <h1>Postula y participa por un premio</h1>
       <p class="muted">Completa tus datos en menos de un minuto, participa en la tómbola y obtén tu número de concurso. Un ejecutivo de admisión te contactará.</p>
       <div class="steps"><b>1 · Tus datos</b><b>2 · Tómbola</b><b>3 · Tu número</b></div>
